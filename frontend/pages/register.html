@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Blood & Donor</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('/blood-bank/public/images/main-image.jpg') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      top:0;
+      left:0;
+      z-index:1;
+    }
+
+    .glass {
+      position: relative;
+      z-index: 2;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      padding: 3rem 2rem;
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      width: 100%;
+      max-width: 400px;
+      color: #fff;
+    }
+
+    .glass h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #e63946;
+      font-weight: 600;
+    }
+
+    .form-control {
+      margin-bottom: 1rem;
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      border: none;
+      outline: none;
+    }
+
+    .form-control:focus {
+      box-shadow: 0 0 10px rgba(230, 57, 70, 0.5);
+    }
+
+    select.form-control {
+      color: #333;
+    }
+
+    .btn-custom {
+      width: 100%;
+      padding: 0.75rem;
+      background: #e63946;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      color: #fff;
+      transition: 0.3s;
+    }
+
+    .btn-custom:hover {
+      background: #ff4b5c;
+    }
+
+    @media(max-width: 576px) {
+      .glass {
+        padding: 2rem 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+     
+
+  <form id="registerForm" class="glass">
+    <h2>Register</h2>
+    <input class="form-control" name="name" placeholder="Full Name" required>
+    <input class="form-control" name="email" placeholder="Email" type="email" required>
+    <input class="form-control" name="password" placeholder="Password" type="password" required>
+    <select class="form-control" name="role" required>
+      <option value="">Select Role</option>
+      <option value="donor">Donor</option>
+      <option value="requester">Blood Request Person</option>
+      <option value="hospital">Hospital</option>
+      <option value="admin">Admin</option>
+    </select>
+    <button type="submit" class="btn btn-custom">Register</button>
+    <p class="text-center mt-3">Already have an account? <a href="login.html" style="color:#e63946;">Login</a></p>
+  </form>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
