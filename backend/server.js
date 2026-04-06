@@ -213,6 +213,37 @@ app.put("/api/admin/approve-request/:id", auth, async (req, res) => {
   }
 });
 
+// ❌ Reject Donor
+app.put("/api/admin/reject-donor/:id", auth, async (req, res) => {
+  try {
+    const donor = await Donor.findById(req.params.id);
+    if (!donor) return res.status(404).json({ message: "Donor not found" });
+
+    donor.status = "rejected";
+    await donor.save();
+
+    res.json({ message: "Donor rejected" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+// ❌ Reject Blood Request
+app.put("/api/admin/reject-request/:id", auth, async (req, res) => {
+  try {
+    const reqBlood = await Request.findById(req.params.id);
+    if (!reqBlood) return res.status(404).json({ message: "Request not found" });
+
+    reqBlood.status = "rejected";
+    await reqBlood.save();
+
+    res.json({ message: "Request rejected" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // =======================
 // HOSPITAL ROUTES
 // =======================

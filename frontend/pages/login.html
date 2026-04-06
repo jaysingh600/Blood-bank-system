@@ -12,67 +12,169 @@
 
   <!-- External CSS -->
   <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      height: 100vh;
+      margin: 0;
+    }
+
+    /* Navbar */
+    .header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+    }
+
+    .logo {
+      color: #fff;
+      font-weight: 600;
+      font-size: 22px;
+    }
+
+    .nav a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .nav a:hover {
+      color: #ff4d4d;
+    }
+
+    /* Background */
+    .main {
+      height: 100vh;
+      background: url('https://images.unsplash.com/photo-1615461066159-fea0960485d5') no-repeat center center/cover;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 100px 50px 50px;
+    }
+
+    /* Left Text */
+    .left-content {
+      color: rgb(54, 3, 3);
+      max-width: 50%;
+    }
+
+    .left-content h1 {
+      font-size: 42px;
+      font-weight: 600;
+    }
+
+    .left-content p {
+      margin-top: 15px;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    /* Login Card */
+    .glass {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
+      border-radius: 15px;
+      padding: 30px;
+      color: white;
+    }
+
+    .btn-custom {
+      background: #ff4d4d;
+      border: none;
+      color: white;
+    }
+
+    .btn-custom:hover {
+      background: #e60000;
+    }
+
+    input {
+      background: rgba(255,255,255,0.2) !important;
+      border: none !important;
+      color: white !important;
+    }
+
+    input::placeholder {
+      color: #ddd;
+    }
+  </style>
 </head>
 
-<body class="d-flex justify-content-center align-items-center">
-  
+<body>
 
-  <div class="glass shadow" style="width: 400px;">
+  <!-- Navbar -->
+  <header class="header">
+    <div class="logo">Blood & Donor</div>
+    <nav class="nav">
+      <a href="#home">Home</a>
+      <a href="#stats">Stats</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+      <a href="admin-dashboard.html">Admin</a>
+      <a href="hospital-dashboard.html">Hospital</a>
+    </nav>
+  </header>
 
-    <h2 class="text-center mb-4">🔐 Login</h2>
+  <!-- Main Section -->
+  <div class="main">
 
-    <!-- LOGIN FORM -->
-    <form id="loginForm">
+    <!-- Left Side Content -->
+    <div class="left-content">
+      <h1>Donate Blood, Save Lives ❤️</h1>
+      <p>
+        Every drop of blood can make a difference. Your donation can help save
+        patients in emergencies, surgeries, and critical treatments. Join our
+        mission and be a hero today.
+      </p>
+    </div>
 
-      <!-- Email -->
-      <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input 
-          type="email" 
-          name="email" 
-          class="form-control" 
-          placeholder="Enter email"
-          required
-        >
-      </div>
+    <!-- Login Form -->
+    <div class="glass shadow" style="width: 400px;">
 
-      <!-- Password -->
-      <div class="mb-3">
-        <label class="form-label">Password</label>
-        <input 
-          type="password" 
-          name="password" 
-          class="form-control" 
-          placeholder="Enter password"
-          minlength="5"
-          required
-        >
-      </div>
+      <h2 class="text-center mb-4">🔐 Login</h2>
 
-      <!-- Role Info -->
-      <div class="mb-3 text-center">
-        <small class="text-light">
-          Login as Donor / Requester / Hospital / Admin
-        </small>
-      </div>
+      <form id="loginForm">
 
-      <!-- Submit -->
-      <button type="submit" class="btn btn-custom w-100">
-        Login
-      </button>
+        <div class="mb-3">
+          <label>Email</label>
+          <input type="email" name="email" class="form-control" placeholder="Enter email" required>
+        </div>
 
-      <!-- Register Link -->
-      <div class="text-center mt-3">
-        <p>
-          Don't have an account? 
-          <a href="register.html" class="text-warning">Register</a>
-        </p>
-      </div>
+        <div class="mb-3">
+          <label>Password</label>
+          <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+        </div>
 
-    </form>
+        <div class="mb-3 text-center">
+          <small>Login as Donor / Requester / Hospital / Admin</small>
+        </div>
+
+        <button type="submit" class="btn btn-custom w-100">
+          Login
+        </button>
+
+        <div class="text-center mt-3">
+          <p>
+            Don't have an account?
+            <a href="register.html" class="text-warning">Register</a>
+          </p>
+        </div>
+
+      </form>
+    </div>
+
   </div>
 
-  <!-- External JS -->
+  <!-- JS -->
   <script src="../js/main.js"></script>
 
 </body>

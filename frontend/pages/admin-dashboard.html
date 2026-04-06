@@ -73,6 +73,14 @@
       .bg-AB + {
         background: #8ac926;
       }
+      .bg-Aplus { background: #e63946; color: #fff; }
+.bg-Aminus { background: #d62828; color: #fff; }
+.bg-Bplus { background: #f77f00; color: #fff; }
+.bg-Bminus { background: #f4a261; color: #fff; }
+.bg-Oplus { background: #2a9d8f; color: #fff; }
+.bg-Ominus { background: #21867a; color: #fff; }
+.bg-ABplus { background: #8ac926; color: #fff; }
+.bg-ABminus { background: #6a994e; color: #fff; }
     </style>
   </head>
   <body id="adminPage">
@@ -91,27 +99,48 @@
     </nav>
 
     <div class="container-fluid mt-4">
+     
       <!-- Blood Inventory -->
       <h2 class="section-title">Blood Inventory</h2>
       <div class="row mb-4">
         <div class="col-md-3">
-          <div class="inventory-card bg-A+">
+          <div class="inventory-card bg-Aplus">
             A+ : <span id="blood-A+">0</span> units
           </div>
         </div>
         <div class="col-md-3">
-          <div class="inventory-card bg-B+">
+          <div class="inventory-card bg-Aminus">
+            A- : <span id="blood-A-">0</span> units
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="inventory-card bg-Bplus">
             B+ : <span id="blood-B+">0</span> units
           </div>
         </div>
         <div class="col-md-3">
-          <div class="inventory-card bg-O+">
+          <div class="inventory-card bg-Bminus">
+            B- : <span id="blood-B-">0</span> units
+          </div>
+        </div>
+        <div class="col-md-3 mt-3">
+          <div class="inventory-card bg-Oplus">
             O+ : <span id="blood-O+">0</span> units
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="inventory-card bg-AB+">
+        <div class="col-md-3 mt-3">
+          <div class="inventory-card bg-Ominus">
+            O- : <span id="blood-O-">0</span> units
+          </div>
+        </div>
+        <div class="col-md-3 mt-3">
+          <div class="inventory-card bg-ABplus">
             AB+ : <span id="blood-AB+">0</span> units
+          </div>
+        </div>
+        <div class="col-md-3 mt-3">
+          <div class="inventory-card bg-ABminus">
+            AB- : <span id="blood-AB-">0</span> units
           </div>
         </div>
       </div>
@@ -124,8 +153,11 @@
             <tr>
               <th>Photo</th>
               <th>Name</th>
+              <th>Email</th>
               <th>Blood Group</th>
               <th>Units</th>
+              <th>Contact</th>
+              <th>Address</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
@@ -142,8 +174,11 @@
             <tr>
               <th>Photo</th>
               <th>Name</th>
-              <th>Blood Group</th>
-              <th>Units Needed</th>
+               <th>Email</th>
+               <th>Blood Group</th>
+               <th>Units</th>
+               <th>Contact</th>
+               <th>Address</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>

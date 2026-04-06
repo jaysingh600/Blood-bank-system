@@ -1,5 +1,3 @@
-
-
 const API = "http://localhost:5000/api";
 
 // ================= LOGIN =================
@@ -13,6 +11,7 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     });
+
     const result = await res.json();
     if (!res.ok) throw new Error(result.message || "Login failed");
 
@@ -20,90 +19,278 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
     localStorage.setItem("role", result.role);
     localStorage.setItem("loggedInUser", JSON.stringify(result.user));
 
-    if (result.role === "donor") location.href = "donor.html";
-    if (result.role === "requester") location.href = "blood-request.html";
-    if (result.role === "admin") location.href = "admin-dashboard.html";
-    if (result.role === "hospital") location.href = "hospital-dashboard.html";
-  } catch (err) { alert(err.message); }
+    switch (result.role) {
+      case "donor": location.href = "donor.html"; break;
+      case "requester": location.href = "blood-request.html"; break;
+      case "admin": location.href = "admin-dashboard.html"; break;
+      case "hospital": location.href = "hospital-dashboard.html"; break;
+      default: location.href = "login.html";
+    }
+  } catch (err) {
+    alert(err.message);
+  }
 });
 
 // ================= REGISTER =================
 document.getElementById("registerForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const data = Object.fromEntries(new FormData(e.target));
+  const form = e.target;
+  const btn = form.querySelector("button");
+
+  btn.disabled = true;
+  btn.textContent = "Registering...";
+
+  const data = Object.fromEntries(new FormData(form));
+
   try {
     const res = await fetch(`${API}/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     });
+
     if (!res.ok) throw new Error(await res.text());
-    alert("Registration successful! Please login.");
+
+    alert("Registered Successfully");
     location.href = "login.html";
-  } catch (err) { alert(err.message); }
+  } catch (err) {
+    alert(err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Register";
+  }
 });
 
-/// ================= ADMIN DASHBOARD =================
+// ================= LOGIN CHECK =================
+function checkLogin(roleRequired) {
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+
+  if (!token) {
+    alert("Login required");
+    location.href = "login.html";
+    return false;
+  }
+
+  if (roleRequired && role !== roleRequired) {
+    alert("Access denied");
+    location.href = "login.html";
+    return false;
+  }
+
+  return true;
+}
+
+// ================= LOGOUT =================
+document.getElementById("logoutBtn")?.addEventListener("click", () => {
+  localStorage.clear();
+  location.href = "login.html";
+});
+
+// ================= ADMIN DASHBOARD =================
 async function loadAdmin() {
+  if (!checkLogin("admin")) return;
+
   try {
     const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Please login first!");
-      location.href = "login.html";
-      return;
-    }
 
-    const res = await fetch(`${API}/admin/all`, { 
-      headers: { "Authorization": `Bearer ${token}` } 
+    const res = await fetch(`${API}/admin/all`, {
+      headers: { Authorization: `Bearer ${token}` }
     });
-
-    if (!res.ok) throw new Error("Failed to load admin data. Unauthorized or server error.");
 
     const data = await res.json();
 
-    // Inventory
+    // ===== Inventory =====
     const invMap = {};
-    if (data.inventory && data.inventory.length) {
-      data.inventory.forEach(i => invMap[i.bloodGroup] = i.availableUnits);
-    }
-    document.getElementById("blood-A+").textContent = invMap['A+'] || 0;
-    document.getElementById("blood-B+").textContent = invMap['B+'] || 0;
-    document.getElementById("blood-O+").textContent = invMap['O+'] || 0;
-    document.getElementById("blood-AB+").textContent = invMap['AB+'] || 0;
+    data.inventory?.forEach(i => invMap[i.bloodGroup] = i.availableUnits);
 
-    // Donor Table
+    ["A+","A-","B+","B-","O+","O-","AB+","AB-"].forEach(bg => {
+      const el = document.getElementById(`blood-${bg}`);
+      if (el) el.textContent = invMap[bg] || 0;
+    });
+
+    // ===== Donor Table =====
     const donorTable = document.getElementById("donorTable");
-    if (donorTable && data.donors && data.donors.length) {
-      donorTable.innerHTML = data.donors.map(d => `
-        <tr>
-          <td><img src="/uploads/${d.photo || 'default.png'}" width="50" style="border-radius:50%"></td>
-          <td>${d.name}</td>
-          <td>${d.bloodGroup}</td>
-          <td>${d.units}</td>
-          <td><span class="status-badge status-${d.status.toLowerCase()}">${d.status}</span></td>
-          <td>
-            ${d.status.toLowerCase() === 'pending' ? `<button onclick="approveDonor('${d._id}')" class="btn btn-success btn-sm">Approve</button>` : ''}
-          </td>
-        </tr>
-      `).join("");
-    }
 
-    // Blood Requests Table
+    donorTable.innerHTML = data.donors?.map(d => `
+      <tr>
+        <td><img src="/uploads/${d.photo || 'default.png'}" width="50"></td>
+        <td>${d.name}</td>
+        <td>${d.email}</td>
+        <td>${d.bloodGroup}</td>
+        <td>${d.units}</td>
+        <td>${d.mobile}</td>
+        <td>${d.address}</td>
+
+        <td>
+          <span class="status-badge status-${(d.status || "pending").toLowerCase()}">
+            ${d.status || "Pending"}
+          </span>
+        </td>
+
+        <td>
+          ${
+            d.status === "pending"
+              ? `
+              <button class="btn btn-success btn-action" onclick="approveDonor('${d._id}')">Approve</button>
+              <button class="btn btn-danger btn-action" onclick="rejectDonor('${d._id}')">Reject</button>
+              `
+              : d.status
+          }
+        </td>
+      </tr>
+    `).join("") || "";
+
+    // ===== Request Table =====
     const requestTable = document.getElementById("requestTable");
-    if (requestTable && data.requests && data.requests.length) {
-      requestTable.innerHTML = data.requests.map(r => `
-        <tr>
-          <td><img src="/uploads/${r.photo || 'default.png'}" width="50" style="border-radius:50%"></td>
-          <td>${r.name}</td>
-          <td>${r.bloodGroup}</td>
-          <td>${r.unitsNeeded}</td>
-          <td><span class="status-badge status-${r.status.toLowerCase()}">${r.status}</span></td>
-          <td>
-            ${r.status.toLowerCase() === 'pending' ? `<button onclick="approveRequest('${r._id}')" class="btn btn-danger btn-sm">Approve</button>` : ''}
-          </td>
-        </tr>
-      `).join("");
-    }
+
+    requestTable.innerHTML = data.requests?.map(r => `
+      <tr>
+        <td><img src="/uploads/${r.photo || 'default.png'}" width="50"></td>
+        <td>${r.name}</td>
+        <td>${r.email}</td>
+        <td>${r.bloodGroup}</td>
+        <td>${r.unitsNeeded}</td>
+         <td>${r.mobile}</td>
+        <td>${r.address}</td>
+
+        <td>
+          <span class="status-badge status-${(r.status || "pending").toLowerCase()}">
+            ${r.status || "Pending"}
+          </span>
+        </td>
+
+        <td>
+          ${
+            r.status === "pending"
+              ? `
+              <button class="btn btn-success btn-action" onclick="approveRequest('${r._id}')">Approve</button>
+              <button class="btn btn-danger btn-action" onclick="rejectRequest('${r._id}')">Reject</button>
+              `
+              : r.status
+          }
+        </td>
+      </tr>
+    `).join("") || "";
+
+  } catch (err) {
+    console.error(err);
+    alert("Error loading admin data");
+  }
+}
+
+// ================= ACTION FUNCTIONS =================
+async function approveDonor(id) {
+  const token = localStorage.getItem("token");
+
+  await fetch(`${API}/admin/approve-donor/${id}`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  loadAdmin();
+}
+
+async function rejectDonor(id) {
+  const token = localStorage.getItem("token");
+
+  await fetch(`${API}/admin/reject-donor/${id}`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  loadAdmin();
+}
+
+async function approveRequest(id) {
+  const token = localStorage.getItem("token");
+
+  await fetch(`${API}/admin/approve-request/${id}`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  loadAdmin();
+}
+
+async function rejectRequest(id) {
+  const token = localStorage.getItem("token");
+
+  await fetch(`${API}/admin/reject-request/${id}`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  loadAdmin();
+}
+
+// ================= LOAD =================
+if (document.getElementById("adminPage")) {
+  loadAdmin();
+}
+
+
+// ================= HOSPITAL DASHBOARD =================
+async function loadHospitalDashboard() {
+  if (!checkLogin("hospital")) return;
+
+  try {
+    const token = localStorage.getItem("token");
+
+    // Fetch inventory
+    const invRes = await fetch(`${API}/hospital/inventory`, {
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+    const inventory = await invRes.json();
+    if (!invRes.ok) throw new Error(inventory.message || "Failed to load inventory.");
+
+    const invMap = {};
+    inventory.forEach(i => invMap[i.bloodGroup] = i.availableUnits);
+    ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"].forEach(bg => {
+      const el = document.getElementById(`blood-${bg}`);
+      if (el) el.textContent = invMap[bg] || 0;
+    });
+
+    // Fetch donors
+    const donorsRes = await fetch(`${API}/hospital/donors`, {
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+    const donors = await donorsRes.json();
+    if (!donorsRes.ok) throw new Error(donors.message || "Failed to load donors.");
+
+    const donorTable = document.getElementById("donors-table");
+    donorTable.innerHTML = donors?.map(d => `
+      <tr>
+        <td><img src="/uploads/${d.photo || 'default.png'}" width="50" style="border-radius:50%"></td>
+        <td>${d.name}</td>
+        <td>${d.email}</td>
+        <td>${d.bloodGroup}</td>
+        <td>${d.units}</td>
+        <td>${d.mobile}</td>
+        <td>${d.address}</td>
+      </tr>
+    `).join("") || '';
+
+    // Fetch requests
+    const reqRes = await fetch(`${API}/hospital/requests`, {
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+    const requests = await reqRes.json();
+    if (!reqRes.ok) throw new Error(requests.message || "Failed to load requests.");
+
+    const requestTable = document.getElementById("requests-table");
+    requestTable.innerHTML = requests?.map(r => `
+      <tr>
+        <td><img src="/uploads/${r.photo || 'default.png'}" width="50" style="border-radius:50%"></td>
+        <td>${r.name}</td>
+        <td>${r.email}</td>
+        <td>${r.bloodGroup}</td>
+        <td>${r.units}</td>
+        <td>${r.contact || ''}</td>
+        <td>${r.address}</td>
+        <td><span class="status-badge status-${r.status.toLowerCase()}">${r.status}</span></td>
+      </tr>
+    `).join("") || '';
 
   } catch (err) {
     console.error(err);
@@ -111,165 +298,22 @@ async function loadAdmin() {
   }
 }
 
-// Approve Donor
-async function approveDonor(id) {
-  try {
-    const token = localStorage.getItem("token");
-    await fetch(`${API}/admin/approve-donor/${id}`, { 
-      method: "PUT", 
-      headers: { "Authorization": `Bearer ${token}` } 
-    });
-    loadAdmin();
-  } catch (err) {
-    console.error(err);
-    alert("Failed to approve donor.");
-  }
-}
-
-// Approve Blood Request
-async function approveRequest(id) {
-  try {
-    const token = localStorage.getItem("token");
-    await fetch(`${API}/admin/approve-request/${id}`, { 
-      method: "PUT", 
-      headers: { "Authorization": `Bearer ${token}` } 
-    });
-    loadAdmin();
-  } catch (err) {
-    console.error(err);
-    alert("Failed to approve request.");
-  }
-}
-
+// ================= LOAD DASHBOARDS =================
 if (document.getElementById("adminPage")) loadAdmin();
-// ================= LOGOUT =================
-document.getElementById("logoutBtn")?.addEventListener("click", () => {
-  localStorage.clear();
-  location.href = "login.html";
-});
+if (document.getElementById("hospital-dashboard-page")) loadHospitalDashboard();
 
-
-
-
-
-// ================= HOSPITAL DASHBOARD JS =================
-
-// --- Sidebar Section Switching ---
-const menuItems = document.querySelectorAll("#menu li");
-const sections = document.querySelectorAll("main .section");
-
-menuItems.forEach(item => {
-  item.addEventListener("click", () => {
-    // Highlight active menu
-    menuItems.forEach(i => i.classList.remove("active"));
-    item.classList.add("active");
-
-    // Show corresponding section
-    const target = item.getAttribute("data-target");
-    sections.forEach(sec => sec.classList.toggle("active", sec.id === target));
-  });
-});
-
-// --- Load Donors & Requests Dynamically ---
-async function loadHospitalDashboard() {
-  try {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
-
-    if (!token || role !== "hospital") {
-      alert("Please login as Hospital!");
-      location.href = "login.html";
-      return;
-    }
-
-    // Fetch donors and requests
-    const [donorsRes, requestsRes, invRes] = await Promise.all([
-      fetch(`${API}/hospital/donors`, { headers: { "Authorization": `Bearer ${token}` } }),
-      fetch(`${API}/hospital/requests`, { headers: { "Authorization": `Bearer ${token}` } }),
-      fetch(`${API}/admin/all`, { headers: { "Authorization": `Bearer ${token}` } })
-    ]);
-
-    const donors = await donorsRes.json();
-    const requests = await requestsRes.json();
-    const invData = await invRes.json();
-
-    // Populate Donors Table
-    const donorsTable = document.getElementById("donors-table");
-    if (donorsTable) {
-      donorsTable.innerHTML = donors.map(d => `
-        <tr>
-          <td><img src="/uploads/${d.photo || 'default.png'}" width="50" style="border-radius:50%"></td>
-          <td>${d.name}</td>
-          <td>${d.email}</td>
-          <td>${d.bloodGroup}</td>
-          <td>${d.units}</td>
-          <td>${d.mobile}</td>
-          <td>${d.address}</td>
-        </tr>
-      `).join("");
-    }
-
-    // Populate Blood Requests Table
-    const requestsTable = document.getElementById("requests-table");
-    if (requestsTable) {
-      requestsTable.innerHTML = requests.map(r => `
-        <tr>
-          <td><img src="/uploads/${r.photo || 'default.png'}" width="50" style="border-radius:50%"></td>
-          <td>${r.name}</td>
-          <td>${r.email}</td>
-          <td>${r.bloodGroup}</td>
-          <td>${r.unitsNeeded}</td>
-          <td>${r.contact}</td>
-          <td>${r.address}</td>
-          <td><span class="status-badge status-${r.status.toLowerCase()}">${r.status}</span></td>
-        </tr>
-      `).join("");
-    }
-
-    // Update Inventory
-    if (window.updateBloodInventory && invData.inventory) {
-      updateBloodInventory(invData.inventory);
-    }
-
-  } catch (err) {
-    console.error("Error loading hospital dashboard:", err);
-    alert("Failed to load dashboard data.");
-  }
-}
-
-// --- Blood Inventory Update Function ---
-function updateBloodInventory(inventory) {
-  const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
-  bloodGroups.forEach(bg => {
-    const el = document.getElementById(`blood-${bg}`);
-    if (el && inventory[bg] != null) el.textContent = inventory[bg];
-  });
-}
-
-
-// --- Initialize Dashboard only on hospital page ---
-if (document.getElementById("hospital-dashboard-page")) {
-  document.addEventListener("DOMContentLoaded", loadHospitalDashboard);
-}
-
-
-//blood-request page
+// ================= BLOOD REQUEST FORM =================
 window.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("bloodRequestForm");
   const successMsg = document.getElementById("successMessage");
+  if (!form || !checkLogin("requester")) return;
 
   const token = localStorage.getItem("token");
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
 
-  if (!token || !loggedInUser) {
-    alert("Please login first.");
-    location.href = "login.html";
-    return;
-  }
-
-  // Prefill name & email
-  form.querySelector('input[name="name"]').value = loggedInUser.name;
-  form.querySelector('input[name="email"]').value = loggedInUser.email;
+  // Prefill
+  form.querySelector('input[name="name"]').value = loggedInUser.name || '';
+  form.querySelector('input[name="email"]').value = loggedInUser.email || '';
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -282,18 +326,63 @@ window.addEventListener("DOMContentLoaded", () => {
         body: formData
       });
 
-      const data = await res.json(); // JSON parse safe
-      if (!res.ok) throw new Error(data.message || "Request failed");
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Request failed");
+      }
 
+      const data = await res.json();
       successMsg.classList.remove("d-none");
       setTimeout(() => successMsg.classList.add("d-none"), 2000);
       form.reset();
-      form.querySelector('input[name="name"]').value = loggedInUser.name;
-      form.querySelector('input[name="email"]').value = loggedInUser.email;
+      form.querySelector('input[name="name"]').value = loggedInUser.name || '';
+      form.querySelector('input[name="email"]').value = loggedInUser.email || '';
       alert(data.message);
-
     } catch (err) {
       alert("Error: " + err.message);
     }
   });
 });
+
+// ================= DONOR FORM =================
+document.getElementById("donorForm")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const token = localStorage.getItem("token");
+
+  try {
+    const res = await fetch(`${API}/donor`, {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${token}` },
+      body: formData
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(text || "Request failed");
+    }
+
+    const data = await res.json();
+    alert("Donor request submitted successfully!");
+    e.target.reset();
+  } catch (err) {
+    alert(err.message);
+  }
+});
+
+// ================= DASHBOARD MENU SWITCH =================
+const menuItems = document.querySelectorAll('aside ul li');
+const sections = document.querySelectorAll('main .section');
+menuItems.forEach(item => {
+  item.addEventListener('click', () => {
+    menuItems.forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+    sections.forEach(s => s.classList.remove('active'));
+
+    const target = document.getElementById(item.getAttribute('data-target'));
+    if (target) target.classList.add('active');
+  });
+});
+
+// Show first section by default
+sections.forEach((s, i) => { if(i===0) s.classList.add('active'); });

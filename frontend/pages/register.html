@@ -11,110 +11,167 @@
   <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-  <!-- External CSS -->
-  <link rel="stylesheet" href="../css/style.css">
-
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background: url('/blood-bank/public/images/main-image.jpg') no-repeat center center fixed;
-      background-size: cover;
-      height: 100vh;
+      margin: 0;
+    }
+
+    /* Navbar */
+    .header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 15px 40px;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
     }
 
-    body::before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      top:0;
-      left:0;
-      z-index:1;
-    }
-
-    .glass {
-      position: relative;
-      z-index: 2;
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      padding: 3rem 2rem;
-      border-radius: 15px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-      width: 100%;
-      max-width: 400px;
+    .logo {
       color: #fff;
+      font-weight: 600;
+      font-size: 22px;
     }
 
-    .glass h2 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-      color: #e63946;
+    .nav a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .nav a:hover {
+      color: #ff4d4d;
+    }
+
+    /* Main Section */
+    .main {
+      height: 100vh;
+      background: url('https://images.unsplash.com/photo-1615461066159-fea0960485d5') no-repeat center center/cover;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 100px 50px 50px;
+    }
+
+    /* Left Content */
+    .left-content {
+      color: rgb(230, 23, 23);
+      max-width: 50%;
+    }
+
+    .left-content h1 {
+      font-size: 42px;
       font-weight: 600;
     }
 
-    .form-control {
-      margin-bottom: 1rem;
-      border-radius: 10px;
-      padding: 0.75rem 1rem;
-      border: none;
-      outline: none;
+    .left-content p {
+      margin-top: 15px;
+      font-size: 18px;
+      line-height: 1.6;
     }
 
-    .form-control:focus {
-      box-shadow: 0 0 10px rgba(230, 57, 70, 0.5);
+    /* Glass Form */
+    .glass {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(15px);
+      border-radius: 15px;
+      padding: 30px;
+      color: white;
+      width: 400px;
     }
 
-    select.form-control {
-      color: #333;
+    input, select {
+      background: rgba(255,255,255,0.2) !important;
+      border: none !important;
+      color: white !important;
+      margin-bottom: 12px;
+    }
+
+    input::placeholder {
+      color: #ddd;
+    }
+
+    select {
+      color: #fff;
+    }
+
+    option {
+      color: #000;
     }
 
     .btn-custom {
-      width: 100%;
-      padding: 0.75rem;
-      background: #e63946;
+      background: #ff4d4d;
       border: none;
-      border-radius: 10px;
-      font-weight: 600;
-      color: #fff;
-      transition: 0.3s;
+      color: white;
+      width: 100%;
     }
 
     .btn-custom:hover {
-      background: #ff4b5c;
-    }
-
-    @media(max-width: 576px) {
-      .glass {
-        padding: 2rem 1rem;
-      }
+      background: #e60000;
     }
   </style>
 </head>
-<body>
-  
-     
 
-  <form id="registerForm" class="glass">
-    <h2>Register</h2>
-    <input class="form-control" name="name" placeholder="Full Name" required>
-    <input class="form-control" name="email" placeholder="Email" type="email" required>
-    <input class="form-control" name="password" placeholder="Password" type="password" required>
-    <select class="form-control" name="role" required>
-      <option value="">Select Role</option>
-      <option value="donor">Donor</option>
-      <option value="requester">Blood Request Person</option>
-      <option value="hospital">Hospital</option>
-      <option value="admin">Admin</option>
-    </select>
-    <button type="submit" class="btn btn-custom">Register</button>
-    <p class="text-center mt-3">Already have an account? <a href="login.html" style="color:#e63946;">Login</a></p>
-  </form>
+<body>
+
+  <!-- Navbar -->
+  <header class="header">
+    <div class="logo">Blood & Donor</div>
+    <nav class="nav">
+      <a href="#home">Home</a>
+      <a href="#stats">Stats</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+      <a href="admin-dashboard.html">Admin</a>
+      <a href="hospital-dashboard.html">Hospital</a>
+    </nav>
+  </header>
+
+  <!-- Main Section -->
+  <div class="main">
+
+    <!-- Left Side -->
+    <div class="left-content">
+      <h1>Join Us & Save Lives ❤️</h1>
+      <p>
+        Register today and become a part of our life-saving community.
+        Whether you're a donor, requester, or hospital, your contribution
+        can make a huge impact.
+      </p>
+    </div>
+
+    <!-- Register Form -->
+    <form id="registerForm" class="glass shadow">
+      <h2 class="text-center mb-4">Register</h2>
+
+      <input class="form-control" name="name" placeholder="Full Name" required>
+      <input class="form-control" name="email" placeholder="Email" type="email" required>
+      <input class="form-control" name="password" placeholder="Password" type="password" required>
+
+      <select class="form-control" name="role" required>
+        <option value="">Select Role</option>
+        <option value="donor">Donor</option>
+        <option value="requester">Blood Request Person</option>
+        <option value="hospital">Hospital</option>
+        <option value="admin">Admin</option>
+      </select>
+
+      <button type="submit" class="btn btn-custom mt-2">Register</button>
+
+      <p class="text-center mt-3">
+        Already have an account?
+        <a href="login.html" class="text-warning">Login</a>
+      </p>
+    </form>
+
+  </div>
 
   <script src="../js/main.js"></script>
+
 </body>
 </html>

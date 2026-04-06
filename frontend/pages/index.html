@@ -1,144 +1,266 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Blood & Donor Management</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blood & Donor Management</title>
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
 
-  <style>
-    /* GENERAL RESET */
-    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
-    body { background: #f5f5f5; color: #333; }
+    <style>
+      /* GENERAL RESET */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+      body {
+        background: #f5f5f5;
+        color: #333;
+      }
 
-    /* HEADER / NAVBAR */
-    .header {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1rem 5%; background: #550303; color: #fff; position: sticky; top:0; z-index:1000;
-    }
-    .header .logo { font-size: 1.8rem; font-weight: 700; }
-    .nav a {
-      color: #fff; margin-left: 1.5rem; text-decoration: none; font-weight: 500; transition: 0.3s;
-    }
-    .nav a:hover { color: #ffcccc; }
-    .btn-header {
-      padding: 0.5rem 1rem; background: #fff; color: #e63946; border-radius:5px; font-weight:700;
-    }
-    .btn-header:hover { background: #ffcccb; }
+      /* HEADER / NAVBAR */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 5%;
+        background: #550303;
+        color: #fff;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .header .logo {
+        font-size: 1.8rem;
+        font-weight: 700;
+      }
+      .nav a {
+        color: #fff;
+        margin-left: 1.5rem;
+        text-decoration: none;
+        font-weight: 500;
+        transition: 0.3s;
+      }
+      .nav a:hover {
+        color: #ffcccc;
+      }
+      .btn-header {
+        padding: 0.5rem 1rem;
+        background: #fff;
+        color: #e63946;
+        border-radius: 5px;
+        font-weight: 700;
+      }
+      .btn-header:hover {
+        background: #ffcccb;
+      }
 
-    /* HERO SECTION */
-    .hero {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 5% 5%; min-height: 70vh; gap: 2rem; background: #c71d1d; color: #fff;
-    }
-    .hero-content { max-width: 600px; }
-    .hero-content h1 { font-size: 2.8rem; margin-bottom: 1rem; }
-    .hero-content p { font-size: 1.2rem; margin-bottom: 2rem; }
-    .hero-content .btn { padding:0.75rem 1.5rem; background:#e63946; color:#fff; border:none; border-radius:5px; font-weight:700; cursor:pointer; }
-    .hero-content .btn:hover { background:#ff4b5c; }
-    .hero-image img { width:100%; max-width:500px; border-radius:15px; object-fit:cover; }
+      /* HERO SECTION */
+      .hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5% 5%;
+        min-height: 70vh;
+        gap: 2rem;
+        background: #c71d1d;
+        color: #fff;
+      }
+      .hero-content {
+        max-width: 600px;
+      }
+      .hero-content h1 {
+        font-size: 2.8rem;
+        margin-bottom: 1rem;
+      }
+      .hero-content p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+      }
+      .hero-content .btn {
+        padding: 0.75rem 1.5rem;
+        background: #e63946;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .hero-content .btn:hover {
+        background: #ff4b5c;
+      }
+      .hero-image img {
+        width: 100%;
+        max-width: 500px;
+        border-radius: 15px;
+        object-fit: cover;
+      }
 
-    /* STATISTICS SECTION */
-    .stats { display:flex; justify-content:space-around; flex-wrap:wrap; padding:3rem 5%; gap:1.5rem; }
-    .stat-card {
-      background:#060606; border-radius:15px; padding:2rem; text-align:center;
-      flex:1; min-width:180px; color:#e03737; transition:0.3s;
-    }
-    .stat-card:hover { transform:translateY(-5px); box-shadow:0 5px 20px rgba(0,0,0,0.2); }
-    .stat-card i { font-size:2.5rem; margin-bottom:0.5rem; color:#e63946; }
-    .stat-card h2 { font-size:2rem; margin-bottom:0.5rem; }
+      /* STATISTICS SECTION */
+      .stats {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        padding: 3rem 5%;
+        gap: 1.5rem;
+      }
+      .stat-card {
+        background: #060606;
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        flex: 1;
+        min-width: 180px;
+        color: #e03737;
+        transition: 0.3s;
+      }
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      }
+      .stat-card i {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: #e63946;
+      }
+      .stat-card h2 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
 
-    /* CALL TO ACTION */
-    .cta { text-align:center; padding:4rem 5%; background:#5b030a; color:#efecec; }
-    .cta h2 { font-size:2.5rem; margin-bottom:1rem; }
-    .cta p { font-size:1.2rem; margin-bottom:2rem; }
-    .cta .btn { padding:0.75rem 1.5rem; background:#fff; color:#e63946; border-radius:5px; font-weight:700; }
-    .cta .btn:hover { background:#ffcccb; }
+      /* CALL TO ACTION */
+      .cta {
+        text-align: center;
+        padding: 4rem 5%;
+        background: #5b030a;
+        color: #efecec;
+      }
+      .cta h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+      .cta p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+      }
+      .cta .btn {
+        padding: 0.75rem 1.5rem;
+        background: #fff;
+        color: #e63946;
+        border-radius: 5px;
+        font-weight: 700;
+      }
+      .cta .btn:hover {
+        background: #ffcccb;
+      }
 
-    /* FOOTER */
-    footer {
-      background:#222; color:#fff; text-align:center; padding:2rem 5%; line-height:1.8;
-    }
-    footer a { color:#e63946; text-decoration:none; }
-    footer a:hover { text-decoration:underline; }
+      /* FOOTER */
+      footer {
+        background: #222;
+        color: #fff;
+        text-align: center;
+        padding: 2rem 5%;
+        line-height: 1.8;
+      }
+      footer a {
+        color: #e63946;
+        text-decoration: none;
+      }
+      footer a:hover {
+        text-decoration: underline;
+      }
 
-    /* RESPONSIVE */
-    @media(max-width:900px){
-      .hero { flex-direction:column; text-align:center; }
-    }
-  </style>
-</head>
-<body>
+      /* RESPONSIVE */
+      @media (max-width: 900px) {
+        .hero {
+          flex-direction: column;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER / NAVBAR -->
+    <header class="header">
+      <div class="logo">Blood & Donor</div>
+      <nav class="nav">
+        <a href="#home">Home</a>
+        <a href="#stats">Stats</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+        <a href="admin-dashboard.html">Admin</a>
+        <a href="hospital-dashboard.html">Hospital</a>
+      </nav>
+    </header>
 
-  <!-- HEADER / NAVBAR -->
-  <header class="header">
-    <div class="logo">Blood & Donor</div>
-    <nav class="nav">
-      <a href="#home">Home</a>
-      <a href="#stats">Stats</a>
-      <a href="login.html">Login</a>
-      <a href="register.html" >Register</a>
-      <a href="admin-dashboard.html">Admin</a>
-      <a href="hospital-dashboard.html">Hospital</a>
-     
-    </nav>
-  </header>
+    <!-- HERO SECTION -->
+    <section class="hero" id="home">
+      <div class="hero-content">
+        <h1>Donate Blood, Save Lives</h1>
+        <p>
+          Your small contribution can save thousands of lives. Join our
+          community of donors and hospitals.
+        </p>
+        <a href="register.html" class="btn">Get Started</a>
+      </div>
+      <div class="hero-image">
+        <img
+          src="/blood-bank/public/images/main-image.jpg"
+          alt="Blood Donation"
+        />
+      </div>
+    </section>
 
-  <!-- HERO SECTION -->
-  <section class="hero" id="home">
-    <div class="hero-content">
-      <h1>Donate Blood, Save Lives</h1>
-      <p>Your small contribution can save thousands of lives. Join our community of donors and hospitals.</p>
-      <a href="register.html" class="btn">Get Started</a>
-    </div>
-    <div class="hero-image">
-      <img src="/blood-bank/public/images/main-image.jpg" alt="Blood Donation">
-    </div>
-  </section>
+    <!-- STATISTICS SECTION -->
+    <section class="stats" id="stats">
+      <div class="stat-card">
+        <i class="fas fa-user-friends"></i>
+        <h2>500+</h2>
+        <p>Donors</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-hospital"></i>
+        <h2>50+</h2>
+        <p>Hospitals</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-tint"></i>
+        <h2>120+</h2>
+        <p>Blood Requests</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-heart"></i>
+        <h2>300+</h2>
+        <p>Lives Saved</p>
+      </div>
+    </section>
 
-  <!-- STATISTICS SECTION -->
-  <section class="stats" id="stats">
-    <div class="stat-card">
-      <i class="fas fa-user-friends"></i>
-      <h2>500+</h2>
-      <p>Donors</p>
-    </div>
-    <div class="stat-card">
-      <i class="fas fa-hospital"></i>
-      <h2>50+</h2>
-      <p>Hospitals</p>
-    </div>
-    <div class="stat-card">
-      <i class="fas fa-tint"></i>
-      <h2>120+</h2>
-      <p>Blood Requests</p>
-    </div>
-    <div class="stat-card">
-      <i class="fas fa-heart"></i>
-      <h2>300+</h2>
-      <p>Lives Saved</p>
-    </div>
-  </section>
+    <!-- CALL TO ACTION -->
+    <section class="cta" id="cta">
+      <h2>Become a Hero Today!</h2>
+      <p>
+        Sign up as a donor or hospital and make a difference in someone's life.
+      </p>
+      <a href="register.html" class="btn">Register Now</a>
+    </section>
 
-  <!-- CALL TO ACTION -->
-  <section class="cta" id="cta">
-    <h2>Become a Hero Today!</h2>
-    <p>Sign up as a donor or hospital and make a difference in someone's life.</p>
-    <a href="register.html" class="btn">Register Now</a>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <p>&copy; 2026 Blood & Donor Management. All Rights Reserved.</p>
-    <p>
-      <a href="#">Privacy Policy</a> | 
-      <a href="#">Terms & Conditions</a> | 
-      <a href="#">Contact Us</a>
-    </p>
-  </footer>
-
-</body>
+    <!-- FOOTER -->
+    <footer>
+      <p>&copy; 2026 Blood & Donor Management. All Rights Reserved.</p>
+      <p>
+        <a href="#">Privacy Policy</a> | <a href="#">Terms & Conditions</a> |
+        <a href="#">Contact Us</a>
+      </p>
+    </footer>
+  </body>
 </html>
